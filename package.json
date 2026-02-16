@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "Link Organizer - URL collection with password protection",
   "scripts": {
-    "start": "serve -s . -l ${PORT:-3000}"
-  },
-  "dependencies": {
-    "serve": "^14.2.1"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18"
