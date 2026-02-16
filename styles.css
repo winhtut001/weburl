@@ -245,6 +245,48 @@ body {
   border-top: 1px solid var(--sidebar-border);
 }
 
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.btn-footer {
+  padding: 0.3rem 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-footer:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.btn-lock {
+  display: inline-block;
+  padding: 0.3rem 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-lock:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
 .drive-badge {
   display: inline-block;
   font-size: 0.7rem;
@@ -733,6 +775,28 @@ body {
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin-bottom: 1.25rem;
+}
+
+.import-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+#importData {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  margin-bottom: 0.75rem;
+}
+
+#importData:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 /* ========== Responsive ========== */

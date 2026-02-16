@@ -394,6 +394,59 @@ function handleRenameSubmit(e) {
   render();
 }
 
+// Export / Import
+function exportData() {
+  const data = {
+    collections: state.collections.filter(c => !c.isDefault),
+    links: state.links,
+    collectionNames: state.collectionNames,
+    exportedAt: new Date().toISOString(),
+  };
+  const json = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    alert('Copied to clipboard! Paste into Import on another device.');
+  }).catch(() => {
+    const a = document.createElement('a');
+    a.href = 'data:application/json,' + encodeURIComponent(json);
+    a.download = 'link-organizer-export.json';
+    a.click();
+  });
+}
+
+function openImportModal() {
+  document.getElementById('importData').value = '';
+  document.getElementById('importError').textContent = '';
+  document.getElementById('importModal').classList.add('active');
+  document.getElementById('importModal').setAttribute('aria-hidden', 'false');
+}
+
+function closeImportModal() {
+  document.getElementById('importModal').classList.remove('active');
+  document.getElementById('importModal').setAttribute('aria-hidden', 'true');
+}
+
+function handleImport() {
+  const raw = document.getElementById('importData').value.trim();
+  const errEl = document.getElementById('importError');
+  if (!raw) {
+    errEl.textContent = 'Paste exported data first.';
+    return;
+  }
+  try {
+    const data = JSON.parse(raw);
+    const customCollections = data.collections || [];
+    state.collectionNames = data.collectionNames || {};
+    state.collections = [...defaultCollections, ...customCollections];
+    state.links = Array.isArray(data.links) ? data.links : state.links;
+    saveState();
+    closeImportModal();
+    render();
+    alert('Import successful!');
+  } catch (e) {
+    errEl.textContent = 'Invalid JSON. Use data from Export.';
+  }
+}
+
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
@@ -415,6 +468,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('deleteModalClose')?.addEventListener('click', closeDeleteModal);
   document.getElementById('deleteCancel')?.addEventListener('click', closeDeleteModal);
   document.getElementById('deleteConfirm')?.addEventListener('click', handleDelete);
+  document.getElementById('btnExport')?.addEventListener('click', exportData);
+  document.getElementById('btnImport')?.addEventListener('click', openImportModal);
+  document.getElementById('importModalClose')?.addEventListener('click', closeImportModal);
+  document.getElementById('importCancel')?.addEventListener('click', closeImportModal);
+  document.getElementById('importConfirm')?.addEventListener('click', handleImport);
+  document.getElementById('btnLock')?.addEventListener('click', () => {
+    if (typeof showAuthScreen === 'function') showAuthScreen('login');
+  });
 
   // Sidebar nav
   document.getElementById('sidebarNav')?.addEventListener('click', e => {
@@ -451,6 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (overlay.id === 'deleteModal') closeDeleteModal();
         if (overlay.id === 'collectionModal') closeCollectionModal();
         if (overlay.id === 'renameModal') closeRenameModal();
+        if (overlay.id === 'importModal') closeImportModal();
       }
     });
   });
@@ -466,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeDeleteModal();
       closeCollectionModal();
       closeRenameModal();
+      closeImportModal();
     }
   });
 });

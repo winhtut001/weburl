@@ -44,6 +44,11 @@
       <div class="sidebar-footer">
         <span class="drive-badge">Google Drive</span>
         <div class="link-count" id="linkCount">0 links</div>
+        <div class="footer-actions">
+          <button class="btn-footer" id="btnExport" title="Export links">📤 Export</button>
+          <button class="btn-footer" id="btnImport" title="Import links">📥 Import</button>
+          <button class="btn-lock" id="btnLock" title="Lock">🔒 Lock</button>
+        </div>
       </div>
     </aside>
 
@@ -163,6 +168,25 @@
           <button type="submit" class="btn-primary">Create</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div class="modal-overlay" id="importModal" aria-hidden="true">
+    <div class="modal" role="dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Import Links</h3>
+        <button class="modal-close" id="importModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="import-desc">Paste exported data (from Export on another browser or device). This will replace your current links.</p>
+        <textarea id="importData" placeholder='Paste JSON here...' rows="6"></textarea>
+        <p class="auth-error" id="importError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="importCancel">Cancel</button>
+          <button type="button" class="btn-primary" id="importConfirm">Import</button>
+        </div>
+      </div>
     </div>
   </div>
 
