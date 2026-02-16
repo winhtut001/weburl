@@ -28,3 +28,4 @@ Open http://localhost:3000
 5. Your app will be live at a `*.railway.app` URL
 
 No build step required — it serves the static files directly.
+# weburl
