@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Organizer — My URL Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <h1 class="brand-name">Link Organizer</h1>
+      </div>
+      <div class="sidebar-search">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" placeholder="Search links..." class="search-input" id="searchInput" aria-label="Search links">
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav">
+        <button class="nav-item active" data-collection="all">
+          <span class="nav-icon">◉</span>
+          <span>All Links</span>
+          <span class="nav-count" id="countAll">0</span>
+        </button>
+        <div class="nav-collections" id="navCollections"></div>
+        <div class="nav-divider"></div>
+        <button class="nav-item nav-add" id="btnNewCollection">
+          <span class="nav-icon">+</span>
+          <span>New Collection</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="drive-badge">Google Drive</span>
+        <div class="link-count" id="linkCount">0 links</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="main-header">
+        <div class="header-top">
+          <h2 class="collection-title" id="pageTitle">All Links</h2>
+          <button class="btn-primary" id="btnAddLink">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Link
+          </button>
+        </div>
+        <p class="header-desc">Shared link collection for you and your team. Add, edit, or delete. Data saved in browser.</p>
+      </header>
+
+      <div class="content-grid" id="contentGrid">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">📎</div>
+          <p class="empty-title">No links yet</p>
+          <p class="empty-desc">Click <strong>Add Link</strong> to save your first URL, or use <strong>New Collection</strong> to create a folder.</p>
+          <button class="btn-primary btn-empty" id="btnAddLinkEmpty">Add Link</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Link Modal -->
+  <div class="modal-overlay" id="linkModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Add Link</h3>
+        <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+      <form class="modal-form" id="linkForm">
+        <input type="hidden" id="linkId">
+        <div class="form-group">
+          <label for="linkTitle">Title</label>
+          <input type="text" id="linkTitle" required placeholder="e.g. Chapter 1 Notes">
+        </div>
+        <div class="form-group">
+          <label for="linkUrl">URL</label>
+          <input type="url" id="linkUrl" required placeholder="https://drive.google.com/...">
+        </div>
+        <div class="form-group">
+          <label for="linkMeta">Meta / Description</label>
+          <input type="text" id="linkMeta" placeholder="e.g. Chapter 1, MS Word">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="linkCollection">Collection</label>
+            <select id="linkCollection">
+              <option value="content">Content</option>
+              <option value="quizzes">Quizzes</option>
+              <option value="lab-docs">Lab Documents</option>
+              <option value="lab-videos">Lab Videos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="linkType">Type</label>
+            <select id="linkType">
+              <option value="drive">Drive</option>
+              <option value="youtube">YouTube</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" id="linkNewTab" checked>
+          <label for="linkNewTab">Open in new tab</label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="modalCancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Rename Collection Modal -->
+  <div class="modal-overlay" id="renameModal" aria-hidden="true">
+    <div class="modal modal-sm" role="dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Rename Collection</h3>
+        <button class="modal-close" id="renameModalClose" aria-label="Close">&times;</button>
+      </div>
+      <form class="modal-form" id="renameForm">
+        <input type="hidden" id="renameCollectionId">
+        <div class="form-group">
+          <label for="renameCollectionName">Name</label>
+          <input type="text" id="renameCollectionName" required placeholder="e.g. Study Materials">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="renameCancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Collection Modal -->
+  <div class="modal-overlay" id="collectionModal" aria-hidden="true">
+    <div class="modal modal-sm" role="dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">New Collection</h3>
+        <button class="modal-close" id="collectionModalClose" aria-label="Close">&times;</button>
+      </div>
+      <form class="modal-form" id="collectionForm">
+        <div class="form-group">
+          <label for="collectionName">Collection name</label>
+          <input type="text" id="collectionName" required placeholder="e.g. Projects">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="collectionCancel">Cancel</button>
+          <button type="submit" class="btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal" aria-hidden="true">
+    <div class="modal modal-sm" role="dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete link?</h3>
+        <button class="modal-close" id="deleteModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="delete-message">This cannot be undone.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="deleteCancel">Cancel</button>
+          <button type="button" class="btn-danger" id="deleteConfirm">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
