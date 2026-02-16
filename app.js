@@ -403,14 +403,48 @@ function exportData() {
     exportedAt: new Date().toISOString(),
   };
   const json = JSON.stringify(data, null, 2);
-  navigator.clipboard.writeText(json).then(() => {
-    alert('Copied to clipboard! Paste into Import on another device.');
-  }).catch(() => {
-    const a = document.createElement('a');
-    a.href = 'data:application/json,' + encodeURIComponent(json);
-    a.download = 'link-organizer-export.json';
-    a.click();
-  });
+  document.getElementById('exportData').value = json;
+  document.getElementById('exportModal').classList.add('active');
+  document.getElementById('exportModal').setAttribute('aria-hidden', 'false');
+}
+
+function copyExportToClipboard() {
+  const textarea = document.getElementById('exportData');
+  if (!textarea?.value) return;
+  const text = textarea.value;
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied! Paste into Import on Netlify.');
+    }).catch(() => {
+      fallbackCopy(textarea);
+    });
+  } else {
+    fallbackCopy(textarea);
+  }
+}
+
+function fallbackCopy(textarea) {
+  textarea.select();
+  textarea.setSelectionRange(0, 99999);
+  try {
+    document.execCommand('copy');
+    alert('Copied! Paste into Import on Netlify.');
+  } catch {
+    alert('Select all (Cmd+A) and copy manually.');
+  }
+}
+
+function downloadExport() {
+  const json = document.getElementById('exportData').value;
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  a.download = 'link-organizer-export.json';
+  a.click();
+}
+
+function closeExportModal() {
+  document.getElementById('exportModal').classList.remove('active');
+  document.getElementById('exportModal').setAttribute('aria-hidden', 'true');
 }
 
 function openImportModal() {
@@ -470,6 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('deleteConfirm')?.addEventListener('click', handleDelete);
   document.getElementById('btnExport')?.addEventListener('click', exportData);
   document.getElementById('btnImport')?.addEventListener('click', openImportModal);
+  document.getElementById('exportModalClose')?.addEventListener('click', closeExportModal);
+  document.getElementById('exportCopy')?.addEventListener('click', copyExportToClipboard);
+  document.getElementById('exportDownload')?.addEventListener('click', downloadExport);
+  document.getElementById('exportDone')?.addEventListener('click', closeExportModal);
   document.getElementById('importModalClose')?.addEventListener('click', closeImportModal);
   document.getElementById('importCancel')?.addEventListener('click', closeImportModal);
   document.getElementById('importConfirm')?.addEventListener('click', handleImport);
@@ -513,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (overlay.id === 'collectionModal') closeCollectionModal();
         if (overlay.id === 'renameModal') closeRenameModal();
         if (overlay.id === 'importModal') closeImportModal();
+        if (overlay.id === 'exportModal') closeExportModal();
       }
     });
   });
@@ -529,6 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeCollectionModal();
       closeRenameModal();
       closeImportModal();
+      closeExportModal();
     }
   });
 });

@@ -171,6 +171,25 @@
     </div>
   </div>
 
+  <!-- Export Modal -->
+  <div class="modal-overlay" id="exportModal" aria-hidden="true">
+    <div class="modal" role="dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Links</h3>
+        <button class="modal-close" id="exportModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="import-desc">Copy this data, then use <strong>Import</strong> on Netlify to load your links.</p>
+        <textarea id="exportData" readonly rows="8"></textarea>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="exportCopy">Copy</button>
+          <button type="button" class="btn-secondary" id="exportDownload">Download file</button>
+          <button type="button" class="btn-primary" id="exportDone">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Import Modal -->
   <div class="modal-overlay" id="importModal" aria-hidden="true">
     <div class="modal" role="dialog">
