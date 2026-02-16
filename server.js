@@ -16,6 +16,13 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
+  // Health check for Railway
+  if (req.url === '/health' || req.url === '/healthz') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+    return;
+  }
+
   let filePath = '.' + (req.url === '/' ? '/index.html' : req.url);
   filePath = path.normalize(filePath);
 

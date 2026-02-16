@@ -1,0 +1,8 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "deploy": {
+    "runtime": "V2",
+    "startCommand": "node server.js",
+    "healthcheckPath": "/health"
+  }
+}
